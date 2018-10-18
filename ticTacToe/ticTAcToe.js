@@ -16,32 +16,32 @@ let inputArray =[1,2,3,4,5,6,7,8,9];
 let gameBox = createOutline(inputArray);
 console.log(gameBox);
 
+let firstPlayerName = readline.question("Please enter first player's name : ");
+let secondPlayerName = readline.question("please entre second player's name : ");
 
 let symbol1 = "x";
 let symbol2 = "o";
 let messageForSymbol = "choose between 'x' or 'o' : ";
-let chooseSymbol = readline.question(messageForSymbol);
+let chooseSymbol = readline.question("\n"+firstPlayerName+", "+messageForSymbol);
 if (chooseSymbol == "o"){ 
   symbol1 = "o";
   symbol2 = "x";
 }
-console.log("Player 1 chooses = "+symbol1);
+console.log(firstPlayerName+" chooses = "+symbol1);
 
 for (count = 0; count<9 ; count++){
   let symbolToPrint = symbol2;
-  let player = "Player 2";
-
-  let playerTurnMsg1 = "\nTurn of player 1.. ";
-  let playerTurnMsg2 = "\nTurn of player 2.. ";
-  let turnMsg = playerTurnMsg2;
+  let player = secondPlayerName;
 
   if (isEven(count)) { 
     symbolToPrint = symbol1;
-    turnMsg = playerTurnMsg1;
-    player = "Player 1";
+    player = firstPlayerName;
   } 
-  
-  console.log(turnMsg);
+  let playerTurnMsg = "\nTurn of "+player;
+
+  console.clear();
+  console.log(gameBox);
+  console.log(playerTurnMsg);
 
   let messageForSquare = "Enter the number where you want to put your symbol : ";
   let input = readline.question(messageForSquare);
@@ -50,20 +50,20 @@ for (count = 0; count<9 ; count++){
       inputArray[index] = symbolToPrint;
     }
   }
-let gameBox = createOutline(inputArray);
-console.log(gameBox);
+  gameBox = createOutline(inputArray);
 
   if (inputArray[0] == inputArray[1] && inputArray[1] == inputArray[2] ||
-      inputArray[3] == inputArray[4] && inputArray[4] == inputArray[5] ||
-      inputArray[6] == inputArray[7] && inputArray[7] == inputArray[8] ||
-      inputArray[0] == inputArray[3] && inputArray[3] == inputArray[6] ||
-      inputArray[1] == inputArray[4] && inputArray[4] == inputArray[7] ||
-      inputArray[2] == inputArray[5] && inputArray[5] == inputArray[8] ||
-      inputArray[0] == inputArray[4] && inputArray[4] == inputArray[8] ||
-      inputArray[2] == inputArray[4] && inputArray[4] == inputArray[6]  ){
-    console.log("Game finished.");
-    console.log(player,"won the game :)"); 
+    inputArray[3] == inputArray[4] && inputArray[4] == inputArray[5] ||
+    inputArray[6] == inputArray[7] && inputArray[7] == inputArray[8] ||
+    inputArray[0] == inputArray[3] && inputArray[3] == inputArray[6] ||
+    inputArray[1] == inputArray[4] && inputArray[4] == inputArray[7] ||
+    inputArray[2] == inputArray[5] && inputArray[5] == inputArray[8] ||
+    inputArray[0] == inputArray[4] && inputArray[4] == inputArray[8] ||
+    inputArray[2] == inputArray[4] && inputArray[4] == inputArray[6]  ){
+    console.log(gameBox);
+    console.log("Congradulations !",player,"won the game !"); 
     process.exit();
   }
 }
-console.log("The game is drawn.. ");
+console.log(gameBox);
+console.log("The game is drawn.. :)");
