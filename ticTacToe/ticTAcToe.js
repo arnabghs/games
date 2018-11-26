@@ -3,17 +3,20 @@ const isEven = function(number){
 }
 
 const readline = require('readline-sync');
+
 const createOutline = function (array){
   let firstLine =  array[0]+" | "+array[1]+" | "+array[2]+"\n";
   let secondLine = array[3]+" | "+array[4]+" | "+array[5]+"\n";
   let thirdLine = array[6]+" | "+array[7]+" | "+array[8]+"\n";
-  let underscoreLine = "__ ___ __"+"\n";
+  let underscoreLine = "_ __ __"+"\n";
 
   let outLine = firstLine + underscoreLine + secondLine + underscoreLine + thirdLine;
   return outLine;
 }
-let inputArray =[1,2,3,4,5,6,7,8,9];
-let gameBox = createOutline(inputArray);
+
+let sampleArray =[1,2,3,4,5,6,7,8,9];
+let consoleArray = sampleArray.map(x => x);
+let gameBox = createOutline(consoleArray);
 console.log(gameBox);
 
 let firstPlayerName = readline.question("Please enter first player's name : ");
@@ -29,41 +32,67 @@ if (chooseSymbol == "o"){
 }
 console.log(firstPlayerName+" chooses = "+symbol1);
 
-for (count = 0; count<9 ; count++){
+let usedSquares = [];
+let messageToShow = "Enter the number where you want to put your symbol : ";
+
+const winCondition = function(array){
+  if (array[0] == array[1] && array[1] == array[2] ||
+    array[3] == array[4] && array[4] == array[5] ||
+    array[6] == array[7] && array[7] == array[8] ||
+    array[0] == array[3] && array[3] == array[6] ||
+    array[1] == array[4] && array[4] == array[7] ||
+    array[2] == array[5] && array[5] == array[8] ||
+    array[0] == array[4] && array[4] == array[8] ||
+    array[2] == array[4] && array[4] == array[6]  ){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+const playerAndSymbolSelector = function(number){
   let symbolToPrint = symbol2;
   let player = secondPlayerName;
 
-  if (isEven(count)) { 
+  if (isEven(number)) { 
     symbolToPrint = symbol1;
     player = firstPlayerName;
-  } 
+  }
+  return {player: player, symbolToPrint: symbolToPrint};
+}
+
+for (count = 0; count<9 ; count++){
+
+  let {player,symbolToPrint} = playerAndSymbolSelector(count);
   let playerTurnMsg = "\nTurn of "+player;
 
   console.clear();
   console.log(gameBox);
   console.log(playerTurnMsg);
 
-  let messageForSquare = "Enter the number where you want to put your symbol : ";
-  let input = readline.question(messageForSquare);
-  for (let index in inputArray){
-    if (inputArray[index] == input){
-      inputArray[index] = symbolToPrint;
+  let input = +readline.question(messageToShow);
+  if (sampleArray.includes(input)){
+    if (usedSquares.includes(input)){
+      messageToShow = "This square is already taken,please enter a new number : ";
+      count-- ;
+    } else {
+      consoleArray[input-1] = symbolToPrint;
+      usedSquares.push(input);
+      messageToShow = "Enter the number where you want to put your symbol : ";
     }
+  } else {
+    messageToShow = "Invalid input.Please enter one of the above numbers : ";
+    count-- ;
   }
-  gameBox = createOutline(inputArray);
 
-  if (inputArray[0] == inputArray[1] && inputArray[1] == inputArray[2] ||
-    inputArray[3] == inputArray[4] && inputArray[4] == inputArray[5] ||
-    inputArray[6] == inputArray[7] && inputArray[7] == inputArray[8] ||
-    inputArray[0] == inputArray[3] && inputArray[3] == inputArray[6] ||
-    inputArray[1] == inputArray[4] && inputArray[4] == inputArray[7] ||
-    inputArray[2] == inputArray[5] && inputArray[5] == inputArray[8] ||
-    inputArray[0] == inputArray[4] && inputArray[4] == inputArray[8] ||
-    inputArray[2] == inputArray[4] && inputArray[4] == inputArray[6]  ){
+  gameBox = createOutline(consoleArray);
+
+  if (winCondition(consoleArray)){
     console.log(gameBox);
     console.log("Congradulations !",player,"won the game !"); 
     process.exit();
   }
 }
+
 console.log(gameBox);
 console.log("The game is drawn.. :)");
